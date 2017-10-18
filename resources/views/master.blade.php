@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>Online Pharmacy || BD Trusted Online Pharmacy</title>
 
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -9,14 +9,15 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="keywords" content="Vue js application" />
 
-    <link href='https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons' rel="stylesheet">
+    {{-- <link href='https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons' rel="stylesheet"> --}}
     <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" href="/css/font-awesome.min.css" />
     <link rel="stylesheet" type="text/css" href="/css/custom.css" />
 
     <script type="text/javascript" src="/js/jquery.min.js"></script>
     <script type="text/javascript" src="/js/tether.min.js"></script>
-    {{-- <script type="text/javascript" src="/js/bootstrap.min.js"></script> --}}
+    <script type="text/javascript" src="/js/bootstrap.min.js"></script>
+    @stack('scripts')
 </head>
 <body>
 
@@ -45,9 +46,31 @@
                 <!--top right -->
                 <div class="text-right">
                     <ul class="list-unstyled list-inline">
-                        <li class="list-inline-item"><a  data-toggle="modal" data-target=".login-form" href="">Login </a> </li> or
-                        <li class="list-inline-item"><a data-toggle="modal" data-target=".sign-up-form" href="">Sign Up </a></li>
-                        <li class="list-inline-item"><a class="text-success" href="/track">Track Order</a></li>
+                        @guest
+                            <li class="list-inline-item"><a  data-toggle="modal" data-target=".login-form" href="">Login </a> </li> or
+                            <li class="list-inline-item"><a data-toggle="modal" data-target=".sign-up-form" href="">Sign Up </a></li>
+                        @else
+                            <li class="dropdown list-inline-item">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                    {{ Auth::user()->name }} <span class="caret"></span>
+                                </a>
+
+                                <ul class="dropdown-menu" role="menu">
+                                    <li>
+                                        <a href="{{ route('logout') }}"
+                                            onclick="event.preventDefault();
+                                                     document.getElementById('logout-form').submit();">
+                                            Logout
+                                        </a>
+
+                                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                            {{ csrf_field() }}
+                                        </form>
+                                    </li>
+                                </ul>
+                            </li>
+                        @endguest
+                            <li class="list-inline-item"><a class="text-success" href="/track">Track Order</a></li>
                     </ul>
                 </div>
             </div>
@@ -59,37 +82,35 @@
         <div class="container">
             <div class="row">
                 <!--top left -->
-                <div class="mr-auto">
+                <div class="col-md-6">
                     <div class="logo">
                         <div class="logo-text">
                             <a class="text-success " href="/"><b class="text-primary">Online </b>Pharmacy</a>
                         </div>
-                        <img src="https://cdn3.iconfinder.com/data/icons/finalflags/256/Bangladesh-Flag.png" width="20px" />
+                        {{-- <img src="https://cdn3.iconfinder.com/data/icons/finalflags/256/Bangladesh-Flag.png" width="20px" /> --}}
                         <span class="text-muted text-micro">BD Trusted Online Pharmacy</span>
                     </div>
                 </div>
-
                 <!--top right -->
-                <div class="text-right">
-                    <ul class="list-unstyled list-inline">
-                        <li class="list-inline-item">
-                            <form class="form-inline">
-                              <div class="input-group c-input" style="width:400px;">
-                                <input type="text" class="form-control" placeholder="Examples: Bayer Contour, OneTouch Ultra">
-                                <span class="input-group-btn c-btn">
-                                    <button class="btn btn-success" type="button"><i class="fa fa-search"></i> Search</button>
-                                </span>
-                               </div>
-                            </form>
-                        </li>
+                <div class="col-md-6">
+                    <form class=" searchForm" method="get" action="{{route("search")}}">
+                      <div class="input-group c-input" style="width:400px;">
+                        <input id="search" type="text" name="s" class="form-control" placeholder="Examples: Bayer Contour, OneTouch Ultra" autocomplete="off">
+                        <span class="input-group-btn c-btn">
+                            <button class="btn btn-success" type="submit"><i class="fa fa-search"></i> Search</button>
+                        </span>
+                       </div>
+                       <ul id="results" class='list-unstyled'></ul>
+                    </form>
 
+                    {{-- <ul class="list-unstyled list-inline pull-right">
                         <li class="list-inline-item">
-                            <a class="btn btn-circle" href="">Browse A - Z</a>
+
                         </li>
-                        <li class="list-inline-item">
-                            <a class="btn btn-circle" href="">Shape <img src="/images/medicine-icon.png" alt="" width="25px"></a>
+                         <li class="list-inline-item">
+                            <button class="btn btn-circle" id="callShape">Shape <img src="/images/medicine-icon.png" alt="" width="25px"></button>
                         </li>
-                    </ul>
+                    </ul> --}}
                 </div>
             </div>
         </div>
@@ -129,13 +150,19 @@
     		            <div class="row">
     			            <div class="col-sm-4">
     				            <ul class="multi-column-dropdown">
-    					            <li><a>Action</a></li>
-    					            <li><a href="#">Another action</a></li>
-    					            <li><a href="#">Something else here</a></li>
-    					            <li class="divider"></li>
-    					            <li><a href="#">Separated link</a></li>
-    					            <li class="divider"></li>
-    					            <li><a href="#">One more separated link</a></li>
+    					            <li><a>Vahicle</a></li>
+    					            <li><a href="#">Ambulance</a></li>
+    					            <li><a href="#">Wheel Chare</a></li>
+    					            <li><a href="#">Strecher</a></li>
+    				            </ul>
+    			            </div>
+    			            <div class="col-sm-4">
+    				            <ul class="multi-column-dropdown">
+    					            <li><a>Service</a></li>
+    					            <li><a href="#">Online Doctor</a></li>
+    					            <li><a href="#">Direct Doctor</a></li>
+    					            <li><a href="#">Mentor</a></li>
+    					            <li><a href="#">Guide</a></li>
     				            </ul>
     			            </div>
     			            <div class="col-sm-4">
@@ -143,20 +170,7 @@
     					            <li><a>Action</a></li>
     					            <li><a href="#">Another action</a></li>
     					            <li><a href="#">Something else here</a></li>
-    					            <li class="divider"></li>
     					            <li><a href="#">Separated link</a></li>
-    					            <li class="divider"></li>
-    					            <li><a href="#">One more separated link</a></li>
-    				            </ul>
-    			            </div>
-    			            <div class="col-sm-4">
-    				            <ul class="multi-column-dropdown">
-    					            <li><a>Action</a></li>
-    					            <li><a href="#">Another action</a></li>
-    					            <li><a href="#">Something else here</a></li>
-    					            <li class="divider"></li>
-    					            <li><a href="#">Separated link</a></li>
-    					            <li class="divider"></li>
     					            <li><a href="#">One more separated link</a></li>
     				            </ul>
     			            </div>
@@ -166,11 +180,12 @@
                 </ul>
 
                 <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link outline-success" href="/checkout" >
+                    <li class="nav-item dropdown">
+                        <a class="nav-link btn-circle btn btn-outline-success" href="/cart"  id="navbarDropdownMenuLink" >
                             <span class=""><i class="fa fa-shopping-cart"></i></span>
-                            (<span id="total-cart">0</span>)
+                            (<span id="total-cart"></span>)
                         </a>
+                        <div id="item-display"> </div>
                     </li>
                 </ul>
           </div>
@@ -290,19 +305,37 @@
 
 
 
-
-
-
-
     <!--log in and sign up form -->
     <div class="modal fade login-form" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
     	  <div class="modal-dialog">
     			<div class="loginmodal-container">
       				<h3 class="text-center">Login</h3><br>
-      			  <form method="post">
-        				<input class="form-control form-group" type="text" name="user" placeholder="email">
-        				<input class="form-control form-group" type="password" name="pass" placeholder="Password">
-        				<input class="form-control form-group btn-primary" type="submit" name="login" value="Login">
+      			  <form method="POST" action="{{ route('login') }}">
+                        {{ csrf_field() }}
+        				<div class="form-group {{ $errors->has('email') ? ' has-warning' : '' }}">
+                            <label for="email" class="control-label">E-Mail Address</label>
+        				    <input class="form-control" type="text" name="email" required autofocus>
+        				</div>
+        				<div class="form-group {{ $errors->has('password') ? ' has-warning' : '' }}">
+                            <label for="Password" class="control-label">Password</label>
+        				   <input class="form-control form-group" type="password" name="password" required>
+        				</div>
+
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}> Remember Me
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <input type="submit" class="btn btn-primary" value="Login">
+
+                            <a class="btn btn-link" href="{{ route('password.request') }}">
+                                Forgot Your Password?
+                            </a>
+                        </div>
       			  </form>
 
       			  <div class="login-help">
@@ -316,11 +349,51 @@
     	  <div class="modal-dialog">
     			<div class="loginmodal-container">
       				<h3 class="text-center">Sign Up</h3><br>
-      			  <form method="post">
-        				<input class="form-control form-group" type="text" name="user" placeholder="email">
-        				<input class="form-control form-group" type="password" name="pass" placeholder="Password">
-        				<input class="form-control form-group" type="password" name="pass" placeholder="Re-type Password">
-        				<input class="form-control form-group btn-primary" type="submit" name="login" value="Login">
+      			  <form method="POST" action="{{ route('register') }}">
+                      {{ csrf_field() }}
+                      <div class="form-group{{ $errors->has('name') ? ' has-warning' : '' }}">
+                          <label for="name" class="control-label">Name</label>
+                          <input id="name" type="text" class="form-control" name="name" value="{{ old('name') }}" required autofocus>
+                          @if ($errors->has('name'))
+                              <script type="text/javascript">$('.sign-up-form').modal('show');</script>
+                              <span class="help-block has-warning">
+                                  <strong>{{ $errors->first('name') }}</strong>
+                              </span>
+                          @endif
+                      </div>
+
+                      <div class="form-group{{ $errors->has('email') ? ' has-warning' : '' }}">
+                          <label for="email" class="control-label">E-Mail Address</label>
+                          <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}" required>
+                          @if ($errors->has('email'))
+                              <script type="text/javascript">$('.sign-up-form').modal('show');</script>
+                              <span class="help-block has-warning">
+                                  <strong>{{ $errors->first('email') }}</strong>
+                              </span>
+                          @endif
+                      </div>
+
+                      <div class="form-group{{ $errors->has('password') ? ' has-warning' : '' }}">
+                          <label for="password" class="control-label">Password</label>
+                          <input id="password" type="password" class="form-control" name="password" required>
+                          @if ($errors->has('password'))
+                              <script type="text/javascript">$('.sign-up-form').modal('show');</script>
+                              <span class="help-block has-warning">
+                                  <strong>{{ $errors->first('password') }}</strong>
+                              </span>
+                          @endif
+                      </div>
+
+                      <div class="form-group">
+                          <label for="password-confirm" class="control-label">Confirm Password</label>
+                          <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required>
+                      </div>
+
+                      <div class="form-group">
+                          <button type="submit" class="btn btn-primary">
+                              Register
+                          </button>
+                      </div>
       			  </form>
 
       			  <div class="login-help">
@@ -330,6 +403,29 @@
   		</div>
 	  </div>
 
-    @stack('scripts')
+
+    {{-- <script src="//cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.9.3/typeahead.min.js"></script> --}}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            // $("#test").click(function () {
+            //
+            //     var pid = [];
+            //     var qty = [];
+            //     localStorage.setItem("pid", JSON.stringify(pid));
+            //     localStorage.setItem("qty", JSON.stringify(qty));
+            //     var spid = JSON.parse(localStorage.getItem("pid"));
+            //     var sqty = JSON.parse(localStorage.getItem("qty"));
+            //     alert(spid);
+            //     alert(sqty);
+            // })
+            // var path = "";
+           //
+        //     $('input.typeahead').typeahead({
+        //        name: 'typeahead',
+        //        remote:path,
+        //        limit : 10
+        //    });
+        })
+    </script>
 </body>
 </html>

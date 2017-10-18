@@ -1,11 +1,9 @@
 @extends('master')
 @section('content')
-
       <!--medByCat -->
     <div class="medByCat">
         <div class="container">
             <div class="row ">
-
                 <div class="col-md-12">
                     <ol class="breadcrumb">
                       <li class="breadcrumb-item"><a href="#!">Home</a></li>
@@ -14,7 +12,6 @@
                     </ol>
                 </div>
         {{-- @foreach ($sMed as $sMed) --}}
-
                 <div class="col-md-4">
                     <div class="catList">
                         <img src="/images/300x300.jpg" alt="" width="100%">
@@ -24,7 +21,6 @@
                     <div class="medList">
                         <h3><span class="text-success">{{$sMed->name}}</span> - {{$sMed->description}} <button type="button" name="button" class="btn btn-sm btn-outline-warning">Watch List</button></h3>
                         <p>
-
                             <table class="table  table-responsive">
                               <tbody>
                                 <tr>
@@ -50,19 +46,29 @@
                                 <tr>
                                     <td class="font-weight-bold">Quantity:</td>
                                     <td>
-                                        <form class="quantity" style="width: 300px;" action="" method="post">
+                                        <form id="item-data" style="width: 300px;" action="" method="post">
                                             <div class="input-group">
-                                              <input type="number" class="form-control"value="0">
-                                              <span class="input-group-btn">
-                                                <button class="btn btn-success" type="button">Add To Cart</button>
-                                              </span>
+                                                <span class="input-group-btn">
+                                                    <button class="btn btn-info minus" type="button"><i class="fa fa-minus"></i></button>
+                                                </span>
+
+                                                <input type="number" name="qty" class="form-control text-center"  value="1">
+
+                                                <span class="input-group-btn">
+                                                    <button class="btn btn-info plus" type="button"><i class="fa fa-plus"></i></button>
+                                                </span>
+                                                <span class="input-group-btn">
+                                                    <button class="btn btn-danger add-cart" type="button">Add To Cart</button>
+                                                </span>
                                             </div>
+                                            <input type="hidden" name="id" value="{{$sMed->id}}">
+                                            <input type="hidden" name="name" value="{{$sMed->name}}">
+                                            <input type="hidden" name="price" value="{{$sMed->price}}">
                                         </form>
                                     </td>
                                 </tr>
                               </tbody>
                             </table>
-
                         </p>
                     </div>
                 </div>
