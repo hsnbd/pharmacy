@@ -15,8 +15,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $cat = Categories::with('subCategories')->get();
-        View::share("cat", $cat);
+
     }
     /**
      * Register any application services.
