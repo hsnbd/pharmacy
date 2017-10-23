@@ -22,7 +22,7 @@
                                     <h1 class="title-widget">{{$Vcat->name}}</h1>
                                     <ul>
                                     @foreach ($Vcat->subCategories as $scat)
-                                            <li><a href="/view/{{$Vcat->url_slug}}/{{$scat->url_slug}}" <?php echo ($scat->name == $scname)? "class='text-success'":""?>>{{$scat->name}}</a></li>
+                                            <li><a href="{{url('/')}}/view/{{$Vcat->url_slug}}/{{$scat->url_slug}}" <?php echo ($scat->name == $scname)? "class='text-success'":""?>>{{$scat->name}}</a></li>
                                     @endforeach
                                     </ul>
                                 @endforeach
@@ -35,7 +35,7 @@
                         <div class="ads text-right">
                             <div class="ads-item">
                                 <span class="ads-close">X</span>
-                                <a href="#"><img src="/images/ads{{rand(1,10)}}.jpg" alt="" width="100%"></a>
+                                <a href="#"><img src="{{url('/')}}/images/ads{{rand(1,10)}}.jpg" alt="" width="100%"></a>
                                 <p class="ads-warning text-center">
                                     Tell Us Why?
                                     <br>
@@ -46,7 +46,7 @@
                             </div>
                             <div class="ads-item">
                                 <span class="ads-close">X</span>
-                                <a href="#"><img src="/images/ads{{rand(1,4)}}.png" alt="" width="100%"></a>
+                                <a href="#"><img src="{{url('/')}}/images/ads{{rand(1,4)}}.png" alt="" width="100%"></a>
                                 <p class="ads-warning text-center">
                                     Tell Us Why?
                                     <br>
@@ -74,14 +74,14 @@
                         <div id="shape">
                             <div class="row col-md-12">
                                 <div class="shape mr-auto">
-                                    <a href="{{url()->current()}}?s=rectangle"><img src="/images/shape/rectangle.png" alt="" width="45px"></a>
-                                    <a href="{{url()->current()}}?s=square"><img src="/images/shape/square.png" alt="" width="45px"></a>
-                                    <a href="{{url()->current()}}?s=round"><img src="/images/shape/Round.png" alt="" width="45px"></a>
-                                    <a href="{{url()->current()}}?s=oval"><img src="/images/shape/Oval.png" alt="" width="45px"></a>
-                                    <a href="{{url()->current()}}?s=oblong"><img src="/images/shape/Oblong.png" alt="" width="45px"></a>
-                                    <a href="{{url()->current()}}?s=diamond"><img src="/images/shape/Diamond.png" alt="" width="45px"></a>
-                                    <a href="{{url()->current()}}?s=3-sided"><img src="/images/shape/3_sided.png" alt="" width="45px"></a>
-                                    <a href="{{url()->current()}}?s=5-sided"><img src="/images/shape/5_sided.png" alt="" width="45px"></a>
+                                    <a href="{{url()->current()}}?s=rectangle"><img src="{{url('/')}}/images/shape/rectangle.png" alt="" width="45px"></a>
+                                    <a href="{{url()->current()}}?s=square"><img src="{{url('/')}}/images/shape/square.png" alt="" width="45px"></a>
+                                    <a href="{{url()->current()}}?s=round"><img src="{{url('/')}}/images/shape/Round.png" alt="" width="45px"></a>
+                                    <a href="{{url()->current()}}?s=oval"><img src="{{url('/')}}/images/shape/Oval.png" alt="" width="45px"></a>
+                                    <a href="{{url()->current()}}?s=oblong"><img src="{{url('/')}}/images/shape/Oblong.png" alt="" width="45px"></a>
+                                    <a href="{{url()->current()}}?s=diamond"><img src="{{url('/')}}/images/shape/Diamond.png" alt="" width="45px"></a>
+                                    <a href="{{url()->current()}}?s=3-sided"><img src="{{url('/')}}/images/shape/3_sided.png" alt="" width="45px"></a>
+                                    <a href="{{url()->current()}}?s=5-sided"><img src="{{url('/')}}/images/shape/5_sided.png" alt="" width="45px"></a>
                                 </div>
                                 <div class="color ">
                                     <a title="Red" href="{{url()->current()}}?c=red"></a>
@@ -115,10 +115,10 @@
                                 @foreach ($medList as $med)
                                     <li class="med-item">
                                         <div class="media">
-                                              <img class="d-flex mr-3" src="/images/200x200.jpg" alt="Generic placeholder image" width="100px">
+                                              <img class="d-flex mr-3" src="{{url('/')}}/images/200x200.jpg" alt="Generic placeholder image" width="100px">
                                               <div class="media-body">
                                                 <a href="#" >
-                                                    <h5 class="mt-0"><a href="/medicine/view/{{$med->id}}/{{$med->name}}">{{$med->name}}</a></h5>
+                                                    <h5 class="mt-0"><a href="{{url('/')}}/medicine/view/{{$med->id}}/{{$med->name}}">{{$med->name}}</a></h5>
                                                 </a>
                                                     <p>{{$med->description}}</p>
                                                 </div>
@@ -140,7 +140,7 @@
     </div>
 
 @endsection
-
+{{-- 
 @push('scripts')
     <script type="text/javascript" src="/js/script.js"></script>
-@endpush
+@endpush --}}

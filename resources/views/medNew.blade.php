@@ -8,7 +8,7 @@
                 <div class="col-md-12">
                     <div class="success text-center">
                         <h2 class="display-3">Upload Medicines List</h2>
-                        <form class="" action="/medicine/import" method="post" enctype="multipart/form-data">
+                        <form class="" action="{{url('/')}}/medicine/import" method="post" enctype="multipart/form-data">
                             {{ csrf_field() }}
                             <input type="file" name="medicinesExcel">
                             <input type="submit" name="submit" value="Upload">
@@ -21,6 +21,6 @@
 
 @endsection
 
-@push('scripts')
+{{-- @push('scripts')
     <script type="text/javascript" src="/js/script.js"></script>
-@endpush
+@endpush --}}

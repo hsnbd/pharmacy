@@ -10,19 +10,20 @@ use App\Medicines;
 
 class BaseController extends Controller
 {
+    //Home View_________________________________________________________________
     public function index()
     {
     	return view('index');
     }
 
-    //view medicine for all users maybe
+    //view medicine for all users maybe_________________________________________
     public function medShow($id, $name)
     {
         $sMed = Medicines::where('id', $id)->first();
     	return view('medSingle')->with('sMed', $sMed);
     }
 
-    //medicine List By category
+    //medicine List By category_________________________________________________
     public function medByCat($cat, $sub_cat)
     {
         $Vcat = Categories::with('subCategories')->where('url_slug', $cat)->get();
@@ -41,7 +42,7 @@ class BaseController extends Controller
         return view('medByCat', compact('Vcat', 'medList','scname'));
     }
 
-    //Live Search
+    //Live Search_______________________________________________________________
     public function liveSearch(Request $request)
     {
         ($request->search)? $search = $request->search : $search = 0;
@@ -49,16 +50,14 @@ class BaseController extends Controller
                ->where('name', 'like', '%'.$search.'%')
                ->take(10)
                ->get();
-
         $html = "";
         foreach ($pdt as $pdt) {
         $html .= "<li class='rItem'>{$pdt->name}</li>";
         }
-
         echo $html;
     }
 
-    //Search Results
+    //Search Results____________________________________________________________
     public function searchResult(Request $request)
     {
         if(!$request->s){
@@ -74,26 +73,4 @@ class BaseController extends Controller
 
         return view("search", compact("sResults"));
     }
-
-    //whole saler medicine is stored ot retailer medicine table
-    public function moveToStock(Request $request)
-    {
-        $ids = $request->ids;
-        $qty = $request->qty;
-
-        for($i=0; $i<count($ids); $i++){
-          if($qty[$i] > 0){
-            $data = array(
-                "medicinesid"=>$ids[$i],
-                "retail_marketersid" => 1,
-                "quantity" => $qty[$i]
-            );
-
-            Stock_medicines::create($data)->id;
-          }
-        }
-
-        return redirect("/wholesale/medicine")->with("msg", "Buy Successful");
-    }
-
 }

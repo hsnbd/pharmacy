@@ -22,7 +22,7 @@
                         <div class="ads text-right">
                             <div class="ads-item">
                                 <span class="ads-close">X</span>
-                                <a href="#"><img src="/images/ads{{rand(1,10)}}.jpg" alt="" width="100%"></a>
+                                <a href="#"><img src="{{url('/')}}/images/ads{{rand(1,10)}}.jpg" alt="" width="100%"></a>
                                 <p class="ads-warning text-center">
                                     Tell Us Why?
                                     <br>
@@ -33,7 +33,7 @@
                             </div>
                             <div class="ads-item">
                                 <span class="ads-close">X</span>
-                                <a href="#"><img src="/images/ads{{rand(1,4)}}.png" alt="" width="100%"></a>
+                                <a href="#"><img src="{{url('/')}}/images/ads{{rand(1,4)}}.png" alt="" width="100%"></a>
                                 <p class="ads-warning text-center">
                                     Tell Us Why?
                                     <br>
@@ -63,10 +63,10 @@
                                 @foreach ($sResults as $med)
                                     <li class="med-item">
                                         <div class="media">
-                                              <img class="d-flex mr-3" src="/images/200x200.jpg" alt="Generic placeholder image" width="100px">
+                                              <img class="d-flex mr-3" src="{{url('/')}}/images/200x200.jpg" alt="Generic placeholder image" width="100px">
                                               <div class="media-body">
                                                 <a href="#" >
-                                                    <h5 class="mt-0"><a href="/medicine/view/{{$med->id}}/{{$med->name}}">{{$med->name}}</a></h5>
+                                                    <h5 class="mt-0"><a href="{{url('/')}}/medicine/view/{{$med->id}}/{{$med->name}}">{{$med->name}}</a></h5>
                                                 </a>
                                                     <p>{{$med->description}}</p>
                                                 </div>
@@ -88,7 +88,7 @@
     </div>
 
 @endsection
-
+{{-- 
 @push('scripts')
     <script type="text/javascript" src="/js/script.js"></script>
-@endpush
+@endpush --}}

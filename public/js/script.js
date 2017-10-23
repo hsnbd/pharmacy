@@ -1,14 +1,20 @@
+var token = $('meta[name="csrf-token"]').attr('content');
+loadCart();
+var base_url = base_url;
+//loader bar //_________________________________________________________________
+function loader(v) {
+    if(v == 'on'){
+        $("#log-in").css({ opacity: 0.3 });
+        $("#loader").show(50);
+    }else {
+        $("#log-in").css({ opacity: 1 });
+        $("#loader").hide(50);
+    }
+}
 $(document).ready(function() {
-    //call token globally
-    var token = $('meta[name="csrf-token"]').attr('content');
-    //Global .dropdown menu behaviur change
-    $('.dropdown').hover(function() {
-        $(this).find('.dropdown-menu').stop(true, true).fadeIn();
-    }, function() {
-        $(this).find('.dropdown-menu').stop(true, true).fadeOut();
-    });
-
-    //Search By Char, Shape , color
+    //Global .dropdown menu behaviur change_____________________________________
+    $('.dropdown').hover(function() { $(this).find('.dropdown-menu').stop(true, true).fadeIn(); }, function() { $(this).find('.dropdown-menu').stop(true, true).fadeOut(); });
+    //Search By Char, Shape , color_____________________________________________
     $('#filterType').on('change', function() {
         var q = $(this).val();
         if(q == 'alphabet'){
@@ -22,185 +28,191 @@ $(document).ready(function() {
             $("#char").hide(100);
         }
     });
-
-    //Search Box
+    //Search Box //_____________________________________________________________
     $("#search").on("keyup", function() {
 		var value = $(this).val();
-		$.ajax({
+        var url = $(this).attr("data-ajax-url");
+        $.ajax({
+            url : url,
             type: "POST",
-            url:"/livesearch",
-            data:{
+            data: {
                 'search': value,
                 '_token': token
             },
-            success: function(data) {
-				$("#results").show();
-				$("#results").html(data);
+            success: function (data) {
+                $("#results").show();
+        		$("#results").html(data);
             }
         });
 	});
+    //search results selector //________________________________________________
     $("body").on("click", ".rItem", function () {
         $("#search").val($(this).text());
         $("#results").hide();
     });
-
-    //ads section
+    //ads section_______________________________________________________________
     $(".ads-close").click(function () {
         $(this).hide(100);
         $(this).siblings("a").hide(100);
         $(this).siblings(".ads-warning").show(100);
     });
-
-    var loginForm = $(".login-form");
-    loginForm.submit(function(e){
+    //login form //_____________________________________________________________
+    $("#sign-in").on("click", function(e){
         e.preventDefault();
-        // var formData = loginForm.serialize();
-        var username = $(this).find("input[name=email]").val();
-        var password = $(this).find("input[name=password]").val();
-        var formData = {username, password};
-        console.log(formData);
-        // $.ajax({
-        //     url:'/login',
-        //     type:'POST',
-        //     data: username,
-        //     success:function(data){
-        //         console.log(data);
-        //         alert('Successfully Loaded');
-        //     },
-        //     error: function (data) {
-        //         console.log(data);
-        //     }
-        // });
+        loader('on');
+        var url = $("#log-in").attr('action');
+        var email = $("#log-in").find("input[name=email]").val();
+        var password = $("#log-in").find("input[name=password]").val();
+        var remember = $("#log-in").find("input[name=remember]").val();
+        $.ajax({
+            url: url,
+            type:'POST',
+            data: {
+                'email': email,
+                'password': password,
+                'remember': remember,
+                '_token' : token
+            },
+            success:function(){
+                loader('off');
+                var s = 'Login Successful!';
+                $(".login-form .alert").removeClass("alert-danger").addClass("alert-success").html(s).show();
+                setTimeout(function() {
+                    $('.login-form').modal('hide');
+                    location.reload();
+                }, 1000);
+            },
+            error: function (data) {
+                loader('off');
+                var errors = data.responseJSON.errors;
+                var s = '';
+                for(i in errors){ s += errors[i]; }
+                $(".login-form .alert").addClass("alert-danger").html(s).show();
+            }
+        });
     });
+    //sign up //________________________________________________________________
+    $("#register").on("click", function(e){
+        e.preventDefault();
+        loader('on');
+        var url = $("#sign-up").attr('action');
+        var name = $("#sign-up").find("input[name=name]").val();
+        var email = $("#sign-up").find("input[name=email]").val();
+        var password = $("#sign-up").find("input[name=password]").val();
+        var password_confirmation = $("#sign-up").find("input[name=password_confirmation]").val();
+        $.ajax({
+            url: url,
+            type:'POST',
+            data: {
+                'name': name,
+                'email': email,
+                'password': password,
+                'password_confirmation': password_confirmation,
+                '_token' : token
+            },
+            success:function(){
+                loader('off');
+                var s = 'Registration Successful!';
+                $(".sign-up-form .alert").addClass("alert-success").html(s).show();
+                setTimeout(function() {
+                    $('.sign-up-form').modal('hide');
+                    location.reload();
+                }, 1000);
+            },
+            error: function (data) {
+                loader('off');
+                var errors = data.responseJSON.errors;
+                var s = "";
+                for(i in errors){ s += "<li>" + errors[i] + "</li>"; }
+                $(".sign-up-form .alert").addClass("alert-danger").html(s).show();
+            }
+        });
+    });
+    //address retrive//_________________________________________________________
+    $("#address input[name=address]").on("change", function(e){
+        e.preventDefault();
+        var val = $(this).val();
+        var url = base_url + '/get-address';
+        if (val == "new") {$("#address .prev-address").find("li").remove(); $("#address .new-address").show(100); return; }
+        $("#address .new-address").hide();
+        $.ajax({
+            url: url, type: 'POST', data: { '_token' : token },
+            success: function (data) { $("#address .prev-address").html(data); },
+            error: function (data) { $("#address .prev-address").addClass("alert-danger").html("").show(); }
+        })
+    });
+    //submit with prev-address//________________________________________________
+    $("#address .prev-address").on("click", "li", function () {
+        $('#address .prev-address li.active').removeClass('active');
+        $(this).addClass("active");
+    });
+    //submit with address add//_________________________________________________
+    $("#address input[name=submit]").click(function (e) {
+        e.preventDefault();
+        var aid = $("#address .prev-address li.active").attr("data-id") || 0,
+            name = $("#address input[name=name]").val(),
+            address = $("#address textarea[name=address]").val(),
+            contact = Number($("#address input[name=contact]").val()),
+            ids = [],
+            qtys = [],
+            msg = "";
 
+        for(i in Cart){ ids.push(Cart[i].id) ; qtys.push(Cart[i].qty) ; }
+
+        if (aid < 1) {
+            if (name.length < 3) { msg += "Name is Too Short"; }
+            if (address.length < 5) { msg += "\nAddress is Too Short"; }
+            if (contact.toString().length < 10) { msg += "\nPlease Give valid contact no"; }
+            if (msg.length > 0) { alert(msg); return;}
+        }
+        $.ajax({
+            url: base_url+'/add-full-cart',
+            type: 'POST',
+            data: {
+                '_token' : token,
+                'name': name,
+                'address': address,
+                'contact': contact,
+                'aid': aid,
+                'ids': ids,
+                'qtys': qtys
+            },
+            success: function (data) {
+                if (data = "true") {
+                    Cart = [];
+                    saveCart();
+                    document.location.href = base_url +'/congratulation';
+                }
+            },
+            error: function (data) {
+                var errors = data.responseJSON.errors;
+                var s = "";
+                for(i in errors){ s += "<li>" + errors[i] + "</li>"; }
+                $("#address .alert").addClass("alert-danger").html(s).show();
+                console.log(data);
+            }
+        })
+    });
+    //__________________________________________________________________________
     $(".minus").click(function () {
         var old = Number($("#item-data input[name=qty]").val());
         if(old === 1){ return alert("Minimun Cart Qunatity Is 1"); }
         $("#item-data input[name=qty]").val(--old);
     });
+    //__________________________________________________________________________
     $(".plus").click(function () {
         var old = Number($("#item-data input[name=qty]").val());
         $("#item-data input[name=qty]").val(++old);
     });
 
-
-    //add to cart ----------------------------------------------------------
-    var Cart = [];
-    function addItem(id, name, price, qty) {
-        for (var i in Cart) {
-            if (Cart[i].name === name) {
-                Cart[i].qty = qty;
-                saveCart();
-                return "Cart Updated Successfully";
-            }
-        }
-        Cart.push({id, name, price, qty});
-        saveCart();
-        return "Cart Added Successfully";
-    }
-    // function minusItem(id, qty){
-    //     for (var i in Cart) {
-    //         if (Cart[i].id === id) {
-    //             Cart[i].qty -= qty;
-    //             if (Cart[i].qty === 0) { Cart.splice(i, 1); }
-    //             saveCart();
-    //             return;
-    //         }
-    //     }
-    // }
-    function removeItem(id){
-        for (var i in Cart) {
-            if (Cart[i].id == id) {
-                delete Cart[i];
-                Cart.splice(i, 1);
-                saveCart();
-                return;
-            }
-        }
-    }
-    function clearCart(){
-        Cart = [];
-        saveCart();
-    }
-    function priceItem(id) {
-        var priceItem = 0;
-        for(var i in Cart){
-            if (Cart[i].id === id) {
-                return priceItem = (Cart[i].price * Cart[i].qty).toFixed(2);
-            }
-        }
-    }
-    function priceCart() {
-        var totalCost = 0;
-        for(var i in Cart){
-            totalCost += Cart[i].price * Cart[i].qty;
-        }
-        return totalCost.toFixed(2);
-    }
-    function qtyItem(id) {
-        for(var i in Cart){
-            if(Cart[i].id == id){ return Cart[i].qty;}
-        }
-    }
-    function countCart(){
-        var totalCount = 0;
-        for(var i in cart){
-            totalCount += cart[i].qty;
-        }
-        return totalCount;
-    }
-    function display() {
-        if(Cart.length > 0){
-            var item = "<ul class='dropdown-menu dropdown-menu-right'>";
-            for(i in Cart){
-                    item += "<li>"
-                    +"<span class='removeItem' data-id='"+Cart[i].id
-                    +"'>X</span> <a href='/medicine/view/" +Cart[i].id + "/" + Cart[i].name
-                    +"'><b>" + Cart[i].name
-                    +" </b><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "+ Cart[i].qty
-                    + " X "+ Cart[i].price
-                    +" <b> = $"+ priceItem(Cart[i].id)
-                    +"</b></a></li>";
-            }
-            item += "</ul>";
-        }else {
-            var item = "";
-        }
-        $("#item-display").html(item);
-        $("#total-cart").html(Cart.length);
-    }
-    function displayInCartPage() {
-        if(Cart.length > 0){
-            var item = "<ul class='dropdown-menu dropdown-menu-right'>";
-            for(i in Cart){
-                    item += "<li>"
-                    +"<span class='removeItem' data-id='"+Cart[i].id
-                    +"'>X</span> <a href='/medicine/view/" +Cart[i].id + "/" + Cart[i].name
-                    +"'><b>" + Cart[i].name
-                    +" </b><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "+ Cart[i].qty
-                    + " X "+ Cart[i].price
-                    +" <b> = $"+ priceItem(Cart[i].id)
-                    +"</b></a></li>";
-            }
-            item += "</ul>";
-        }else {
-            var item = "";
-        }
-        $("#item-display").html(item);
-        $("#total-cart").html(Cart.length);
-    }
-    function saveCart(){
-        localStorage.setItem("shoppingCart", JSON.stringify(Cart));
-    }
-    function loadCart(){
-        Cart = JSON.parse(localStorage.getItem("shoppingCart"));
-        if (Cart == null) {
-            Cart = [];
-        }
-    }
+    
+//______________________________________________________________________________
     loadCart();
     display();
-    //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    displayInCartPage();
+    $("#sub-total").html(priceCart());
+    $("#grand-total").html(priceCart());
+    //Add Cart__________________________________________________________________
     $("body").on("click", ".add-cart", function () {
         var id = Number($("#item-data input[name=id]").val());
         var name = $("#item-data input[name=name]").val();
@@ -209,18 +221,25 @@ $(document).ready(function() {
 
         alert(addItem(id, name, price, qty));
         display();
+        displayInCartPage();
+        $("#sub-total").html(priceCart());
+        $("#grand-total").html(priceCart());
         $(".add-cart").text(qtyItem(Number($("#item-data input[name=id]").val())) > 0 ? "Update Cart" : "Add To Cart");
     });
-
+    //Remove Cart Item__________________________________________________________
     $("body").on("click", ".removeItem", function () {
         var id = $(this).attr("data-id");
         removeItem(id);
         $(this).parent().remove();
         $("#total-cart").html(Cart.length);
+        $("#item-data input[name=qty]").val(qtyItem(Number($("#item-data input[name=id]").val())));
         $(".add-cart").text(qtyItem(Number($("#item-data input[name=id]").val())) > 0 ? "Update Cart" : "Add To Cart");
         if(Cart.length <1){ display(); }
+        displayInCartPage();
+        $("#sub-total").html(priceCart());
+        $("#grand-total").html(priceCart());
     });
-
+    //__________________________________________________________________________
     $("#item-data input[name=qty]").val(qtyItem(Number($("#item-data input[name=id]").val())) || 0);
     $(".add-cart").text(qtyItem(Number($("#item-data input[name=id]").val())) > 0 ? "Update Cart" : "Add To Cart");
 })

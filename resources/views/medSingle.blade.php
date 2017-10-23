@@ -14,7 +14,7 @@
         {{-- @foreach ($sMed as $sMed) --}}
                 <div class="col-md-4">
                     <div class="catList">
-                        <img src="/images/300x300.jpg" alt="" width="100%">
+                        <img src="{{url('/')}}/images/300x300.jpg" alt="" width="100%">
                     </div>
                 </div>
                 <div class="col-md-8">
@@ -122,6 +122,6 @@
 
 @endsection
 
-@push('scripts')
+{{-- @push('scripts')
     <script type="text/javascript" src="/js/script.js"></script>
-@endpush
+@endpush --}}

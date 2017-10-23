@@ -65,7 +65,7 @@
                           “Health Warehouse has always been very professional and the customer service is excellent.”
                           <br />
                           <br />
-                          <img class="rounded-circle" src="../images/200x200.jpg" width="30px">&nbsp; &nbsp; Mr. Hasan
+                          <img class="rounded-circle" src="{{url('/')}}/images/200x200.jpg" width="30px">&nbsp; &nbsp; Mr. Hasan
                       </p>
                     </div>
                     <div class="carousel-item col-md-12">
@@ -73,7 +73,7 @@
                           Very fast, good price, quality service !!”
                           <br />
                           <br />
-                          <img class="rounded-circle" src="../images/200x200.jpg" width="30px">&nbsp; &nbsp; Mr. Hasan
+                          <img class="rounded-circle" src="{{url('/')}}/images/200x200.jpg" width="30px">&nbsp; &nbsp; Mr. Hasan
                       </p>
                     </div>
                     <div class="carousel-item col-md-12">
@@ -81,7 +81,7 @@
                           “Your service is great and the prices are fantastic!”
                           <br />
                           <br />
-                          <img class="rounded-circle" src="../images/200x200.jpg" width="30px">&nbsp; &nbsp; Mr. Hasan
+                          <img class="rounded-circle" src="{{url('/')}}/images/200x200.jpg" width="30px">&nbsp; &nbsp; Mr. Hasan
                       </p>
                     </div>
                   </div>
@@ -95,6 +95,6 @@
 
 @endsection
 
-@push('scripts')
+{{-- @push('scripts')
     <script type="text/javascript" src="/js/script.js"></script>
-@endpush
+@endpush --}}

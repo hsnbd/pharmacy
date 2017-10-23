@@ -1,6 +1,7 @@
 <?php
 
 Route::get('/medicine/new', 'MaatwebsiteExcelController@medNew');
+
 Route::post('/medicine/import', 'MaatwebsiteExcelController@importExcel');
 
 
@@ -18,36 +19,16 @@ Route::post('/add-cart', 'CartController@addCart');
 
 Route::get('/cart', 'CartController@view');
 
+Route::get('/checkout', 'CartController@checkout');
 
-Route::get('/script', function()
-{
-    return view('script');
-});
+Route::post('/add-full-cart', 'CartController@addFullCart');
 
-// Route::get('downloadExcel/{type}', 'MaatwebsiteDemoController@downloadExcel');
-// Route::post('importExcel', 'MaatwebsiteDemoController@importExcel');
+Route::post('/get-address', 'CartController@getAddress');
 
-// //For whole saler
-// Route::get('/ws/medicine', 'WholeSalerController@view');
-// Route::get('/ws/medicine/new', 'WholeSalerController@new');
-// Route::post('/ws/medicine/new', 'WholeSalerController@store');
+Route::get('/congratulation', 'CartController@congratulation');
 
-// //For retailer in whole saler
-// Route::get('/wholesale/medicine', 'BaseController@wsMedViewForRetail');
-// Route::post('/wholesale/medicine/moveToStock', 'BaseController@moveToStock');
-// //for retailer
-// //view all medicine from medicines table
-// Route::get('/rt/medicine', 'Retail_marketerController@view');
-// //view all company
-// Route::get('/company', 'CompaniesController@view');
-// Route::get('/company/{id}', 'CompaniesController@show');
-//
-//
-//
-// //for customer
-// Route::get('/medicine', 'CustomerController@view');
-// Route::get('/medicine/watch-list', 'CustomerController@watchList');
-// Route::get('/medicine/{id}', 'CustomerController@show');
-//
+
+Route::get('/script', function() { return view('script'); });
+
 Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
