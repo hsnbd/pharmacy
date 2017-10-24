@@ -1,6 +1,6 @@
 <?php
 
-if ($this->app->environment() == 'local') {
+if (app()->environment() == 'local') {
     return [
         'default' => 'mysql',
 
