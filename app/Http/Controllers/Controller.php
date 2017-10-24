@@ -15,6 +15,6 @@ class Controller extends BaseController
     public function __construct()
     {
         $cat = Categories::with('subCategories')->get();
-        View::share("cat", $cat);
+        \View::share("cat", $cat);
     }
 }
