@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\URL;
 use \View;
 use \DB;
 use App\Categories;
@@ -15,7 +16,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-
+        // Force SSL in production
+        if ($this->app->environment() == 'local') {
+            URL::forceScheme('https');
+        }
+        $cat = Categories::with('subCategories')->get();
+        View::share("cat", $cat);
     }
     /**
      * Register any application services.
