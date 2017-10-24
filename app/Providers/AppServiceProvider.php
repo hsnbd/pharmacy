@@ -20,7 +20,8 @@ class AppServiceProvider extends ServiceProvider
         if ($this->app->environment() == 'local') {
             URL::forceScheme('https');
         }
-    
+        $cat = Categories::with('subCategories')->get();
+        View::share("cat", $cat);
     }
     /**
      * Register any application services.
