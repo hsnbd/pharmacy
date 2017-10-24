@@ -3,8 +3,10 @@
 return [
 
 
+
     'default' => 'pgsql',
 
+    'connections' => [
         'mysql' => [
             'driver' => 'mysql',
             'host' => env('DB_HOST', '127.0.0.1'),
@@ -19,7 +21,6 @@ return [
             'strict' => true,
             'engine' => null,
         ],
-
         'pgsql' => [
             'driver'   => 'pgsql',
             'host'     => parse_url(getenv("DATABASE_URL"))["host"],
@@ -32,8 +33,8 @@ return [
             'sslmode' => 'prefer',
         ],
     ],
-    'migrations' => 'migrations',
 
+    'migrations' => 'migrations',
 
     'redis' => [
 
