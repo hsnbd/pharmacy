@@ -15,20 +15,34 @@ class Medicines extends Model
     protected $fillable = ['name', 'description', 'price', 'sub_categoriesid', 'unitsid', 'genericsid', 'powersid', 'discount', 'stock', 'least_order'];
 
 
-    public function subCategories()
+    public function subCategory()
     {
-        return $this->hasMany(Sub_categories::class);
+        return $this->belongsTo('App\Sub_categories','sub_categoriesid','id');
     }
-    public function units()
+
+    public function unit()
     {
-        return $this->hasMany(Units::class);
+        return $this->belongsTo('App\Units','unitsid','id');
     }
-    public function generics()
+
+    public function generic()
     {
-        return $this->hasMany(Generics::class);
+        return $this->belongsTo('App\Generics','genericsid','id');
     }
-    public function powers()
+    
+    public function power()
     {
-        return $this->hasMany(Powers::class);
+        return $this->belongsTo('App\Powers','powersid','id');
     }
+
+    // NOTE: It Dosen't Need.. Try to Get Using SubCategory Property
+    // public function category()
+    // {
+    //     return \DB::table('categories as cat') ->select('cat.name as cname') ->join('sub_categories as scat', 'scat.categories_id', '=', 'cat.id') ->where('scat.id', $this->sub_categoriesid) ->first()->cname;
+    // }
+    // NOTE: Be More Smart to Use Eloquent
+    // public function power()
+    // {
+    //     return Powers::where('id', $this->powersid)->first()->name;
+    // }
 }

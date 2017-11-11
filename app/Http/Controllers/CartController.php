@@ -6,17 +6,16 @@ use Illuminate\Http\Request;
 
 class CartController extends Controller
 {
-    //--------------------------------------------------------------------------
     public function view()
     {
         return view("medCart");
     }
-    //--------------------------------------------------------------------------
+
     public function checkout()
     {
         return view("checkout");
     }
-    //addFullCart---------------------------------------------------------------
+    //addFullCart
     public function addFullCart(Request $request)
     {
         if ($request->aid == 0) {
@@ -45,7 +44,7 @@ class CartController extends Controller
         }
         return (count($ids) == count($results))? "true": "false";
     }
-    //getAddress----------------------------------------------------------------
+    //getAddress
     public function getAddress(Request $request)
     {
         $address = DB::table("shipping")->where('usersid', \Auth::id())->get();
@@ -57,7 +56,7 @@ class CartController extends Controller
         }
         return $rs;
     }
-    //congratulation------------------------------------------------------------
+    //congratulation
     public function congratulation()
     {
         return view('congratulation');

@@ -18,14 +18,12 @@
                     <div class="catList">
                         <ul class="list-unstyled clear-margins"><!-- widgets -->
                             <li class="widget-container widget_nav_menu"><!-- widgets list -->
-                                @foreach ($Vcat as $Vcat)
-                                    <h1 class="title-widget">{{$Vcat->name}}</h1>
-                                    <ul>
-                                    @foreach ($Vcat->subCategories as $scat)
-                                            <li><a href="{{url('/')}}/view/{{$Vcat->url_slug}}/{{$scat->url_slug}}" <?php echo ($scat->name == $scname)? "class='text-success'":""?>>{{$scat->name}}</a></li>
+                                <h1 class="title-widget">{{$scat->category->name}}</h1>
+                                <ul>
+                                    @foreach ($scatAll as $scatAll)
+                                        <li><a href="{{url('/')}}/view/{{$scatAll->category->url_slug}}/{{$scatAll->url_slug}}" <?php echo ($scat->name == $scatAll->name)? "class='text-success'":""?>>{{$scatAll->name}}</a></li>
                                     @endforeach
-                                    </ul>
-                                @endforeach
+                                </ul>
                             </li>
                         </ul>
 
@@ -61,7 +59,7 @@
                 <div class="col-md-9">
                     <div class="medList">
                         <div class="row">
-                            <h3 class="display-5 col-md-6 mr-auto">{{$scname}}</h3>
+                            <h3 class="display-5 col-md-6 mr-auto">{{$scat->name}}</h3>
                             <form class="col-md-6 text-right">
                                 <select id="filterType" name="type">
                                     <option value="search"  selected>Filter BY</option>
@@ -115,7 +113,7 @@
                                 @foreach ($medList as $med)
                                     <li class="med-item">
                                         <div class="media">
-                                              <img class="d-flex mr-3" src="{{url('/')}}/images/200x200.jpg" alt="Generic placeholder image" width="100px">
+                                             <img class="d-flex mr-3" src="{{glob(public_path("/images/product/med-" . $med->id. ".*")) ?  url("/") . "/images/product/med-" . $med->id. ".jpg" : url("/")  . "/images/product/demo.jpg" }}" alt="" width="100px">
                                               <div class="media-body">
                                                 <a href="#" >
                                                     <h5 class="mt-0"><a href="{{url('/')}}/medicine/view/{{$med->id}}/{{$med->name}}">{{$med->name}}</a></h5>
@@ -140,7 +138,7 @@
     </div>
 
 @endsection
-{{-- 
+{{--
 @push('scripts')
     <script type="text/javascript" src="/js/script.js"></script>
 @endpush --}}

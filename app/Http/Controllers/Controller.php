@@ -14,6 +14,7 @@ class Controller extends BaseController
 
     public function __construct()
     {
+        // NOTE: I Don't Know Why composer get error when I push it to heroku app (with this code put in service provider)
         $cat = Categories::with('subCategories')->get();
         \View::share("cat", $cat);
     }

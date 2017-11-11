@@ -8,6 +8,6 @@ class Units extends Model
 {
     public function medicines()
     {
-        return $this->belongsTo(Medicines::class);
+        return $this->hasMany('App\Medicines', 'unitsid');
     }
 }

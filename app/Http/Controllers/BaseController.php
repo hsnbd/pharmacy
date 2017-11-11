@@ -10,26 +10,26 @@ use App\Medicines;
 
 class BaseController extends Controller
 {
-    //Home View_________________________________________________________________
+    //Home View
     public function index()
     {
     	return view('index');
     }
 
-    //view medicine for all users maybe_________________________________________
+    //view medicine for all users maybe
     public function medShow($id, $name)
     {
-        $sMed = Medicines::where('id', $id)->first();
-    	return view('medSingle')->with('sMed', $sMed);
+        $sMed = Medicines::find($id);
+    	return view('medSingle', compact('sMed'));
     }
 
-    //medicine List By category_________________________________________________
+    //medicine List By category
     public function medByCat($cat, $sub_cat)
     {
-        $Vcat = Categories::with('subCategories')->where('url_slug', $cat)->get();
-        $scname = Sub_categories::where('url_slug', $sub_cat)->select("id", "name")->get();
-
-        foreach ($scname as $scname) {$sid = $scname->id; $scname = $scname->name;}
+        $scat = Sub_categories::where('url_slug', $sub_cat)->first();
+        $scatAll = Sub_categories::where('categories_id', $scat->category->id)->get();
+        // dd($scat->category->url_slug);
+        $sid = $scat->id;
 
         if (request()->exists('q')) {
             $q = request()->get('q');
@@ -37,12 +37,11 @@ class BaseController extends Controller
         }else {
             $medList = Medicines::where('sub_categoriesid', $sid)->paginate(4);
         }
-
         // dd($medList);
-        return view('medByCat', compact('Vcat', 'medList','scname'));
+        return view('medByCat', compact('scat', 'medList', 'scatAll'));
     }
 
-    //Live Search_______________________________________________________________
+    //Live Search
     public function liveSearch(Request $request)
     {
         ($request->search)? $search = $request->search : $search = 0;
@@ -57,7 +56,7 @@ class BaseController extends Controller
         echo $html;
     }
 
-    //Search Results____________________________________________________________
+    //Search Results
     public function searchResult(Request $request)
     {
         if(!$request->s){

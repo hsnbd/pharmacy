@@ -14,7 +14,7 @@
         {{-- @foreach ($sMed as $sMed) --}}
                 <div class="col-md-4">
                     <div class="catList">
-                        <img src="{{url('/')}}/images/300x300.jpg" alt="" width="100%">
+                        <img src="{{glob(public_path("/images/product/med-" . $sMed->id. ".*")) ?  url("/") . "/images/product/med-" . $sMed->id. ".jpg" : url("/")  . "/images/product/demo.jpg" }}" alt="" width="100%">
                     </div>
                 </div>
                 <div class="col-md-8">
