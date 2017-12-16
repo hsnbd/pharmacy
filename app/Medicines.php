@@ -29,7 +29,7 @@ class Medicines extends Model
     {
         return $this->belongsTo('App\Generics','genericsid','id');
     }
-    
+
     public function power()
     {
         return $this->belongsTo('App\Powers','powersid','id');

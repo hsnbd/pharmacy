@@ -1,0 +1,84 @@
+<?php
+$r = getValue("Want to edit multiple image? (YES/NO) ");
+echo "\n";
+
+if (strtolower($r) == "no") {
+    $img = getValue("Enter Image Name (Example: image1.jpg): ");
+    $file[] = checkMime($img, "image/jpeg");
+    goto f;
+}
+
+
+if ($directory = opendir(dirname(__FILE__))) {
+    while (false !== ($fileName = readdir($directory))) {
+        if (checkMime($fileName, "image/jpeg") != null) {
+            $file[] = $fileName;
+        };
+     }
+    closedir($directory);
+}
+f:
+    $width = getValue("Enter Image Width: (Example: 1080)", "int");
+    echo "\n";
+    $height = getValue("Enter Image height: (Example: 720)", "int");
+    echo "\n";
+    echo "\n";
+
+
+    $mask = "|%2.5s |%-20.30s | %-10.30s |\n";
+    echo "---------------------------------------- \n";
+    printf($mask, '#', 'Title', 'status');
+    echo "---------------------------------------- \n";
+    foreach ($file as $i => $f) {
+        if(imageResize($f, $width, $height)){
+            printf($mask, ++$i, $f, "Resized");
+        }else {
+            printf($mask, ++$i, $f, "Problem Found!");
+        }
+    }
+
+function getValue($msg, $returnType = "str")
+{
+    m:
+    echo $msg;
+    $r = fopen("php://stdin", "r");
+    $r = trim(fgets($r));
+    if ($returnType == "int") {
+        if ((is_int($r) || ctype_digit($r)) && (int)$r >= 0 ){
+            return $r = (int)$r;
+        }
+        echo "Try Again Please!!!\n";
+        goto m;
+    }
+    if (strlen($r) <1) {
+        echo "Try Again Please!!!\n";
+        goto m;
+    }
+    return $r;
+}
+
+function checkMime($path, $type)
+{
+    if (mime_content_type($path) == $type) {
+        return $path;
+    }
+}
+function imageResize($filePath, $width, $height)
+{
+    // $result = move_uploaded_file($tmpName, $filePath);
+    $orig_image = imagecreatefromjpeg($filePath);
+    $image_info = getimagesize($filePath);
+    $width_orig  = $image_info[0]; // current width as found in image file
+    $height_orig = $image_info[1]; // current height as found in image file
+    // $width = 1024; // new image width
+    // $height = 768; // new image height
+    $destination_image = imagecreatetruecolor($width, $height);
+    imagecopyresampled($destination_image, $orig_image, 0, 0, 0, 0, $width, $height, $width_orig, $height_orig);
+    // This will just copy the new image over the original at the same filePath.
+    if (imagejpeg($destination_image, $filePath, 100)) {
+        return true;
+        // static $i = 1;
+        // return str_pad ($filePath, 20) . "Image Successfully Created \n";
+    }
+}
+end:

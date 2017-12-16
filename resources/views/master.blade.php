@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <link rel="shortcut icon" type="image/ico" href="{{url('/')}}/images/Bangladesh-Flag.png">
     <title>Online Pharmacy || BD Trusted Online Pharmacy</title>
 
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -18,7 +19,7 @@
       <script type="text/javascript" src="{{url('/')}}/js/jquery.min.js"></script>
       <script type="text/javascript" src="{{url('/')}}/js/tether.min.js"></script>
       <script type="text/javascript" src="{{url('/')}}/js/bootstrap.min.js"></script>
-      <script type="text/javascript" src="{{url('/')}}/js/jsFunction.js"></script>
+      <script type="text/javascript" src="{{url('/')}}/js/modules.js"></script>
       <script type="text/javascript" src="{{url('/')}}/js/script.js"></script>
     {{-- @stack('scripts') --}}
 </head>

@@ -1,11 +1,4 @@
 <?php
-
-// Route::get('/getCat', function  ()
-// {
-//     $m = App\Categories::find(1);
-//     dd($m->subCategories);
-// });
-
 Route::group(['prefix' => 'admin',  'middleware' => 'auth'], function()
 {
     Route::view('dashboard', 'admin/dashboard');
@@ -36,6 +29,8 @@ Route::get('/view/{cat}/{sub_cat}', 'BaseController@medByCat');
 
 Route::get('/medicine/view/{id}/{name}', 'BaseController@medShow');
 
+
+
 Route::post('/add-cart', 'CartController@addCart');
 
 Route::get('/cart', 'CartController@view');
@@ -47,6 +42,12 @@ Route::post('/add-full-cart', 'CartController@addFullCart');
 Route::post('/get-address', 'CartController@getAddress');
 
 Route::get('/congratulation', 'CartController@congratulation');
+
+//watchList add
+Route::post('/add-watch-list', 'ProductsController@addWatchList');
+Route::post('/add-rating', 'ProductsController@addRating');
+Route::post('/add-comment', 'ProductsController@storeComment');
+
 
 Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');

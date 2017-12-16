@@ -202,44 +202,99 @@ $(document).ready(function() {
     //__________________________________________________________________________
     $(".plus").click(function () {
         var old = Number($("#item-data input[name=qty]").val());
-        $("#item-data input[name=qty]").val(++old);
+        var stock = Number($("#item-data button[name=submit]").attr("data-stock"));
+
+        if(old == stock){
+             return alert("Available Stock Is "+ stock +"");
+        }else {
+            $("#item-data input[name=qty]").val(++old);
+        }
     });
 
-    
+
 //______________________________________________________________________________
     loadCart();
     display();
     displayInCartPage();
     $("#sub-total").html(priceCart());
     $("#grand-total").html(priceCart());
-    //Add Cart__________________________________________________________________
-    $("body").on("click", ".add-cart", function () {
-        var id = Number($("#item-data input[name=id]").val());
-        var name = $("#item-data input[name=name]").val();
-        var price = Number($("#item-data input[name=price]").val());
+    //Add Cart In Single Page__________________________________________________________________
+    $("body").on("click", "#item-data .add-cart", function () {
+        var id = Number($(this).attr("data-id"));
+        var name = $(this).attr("data-name");
+        var description = $(this).attr("data-description");
+        var price = Number($(this).attr("data-price"));
         var qty = Number($("#item-data input[name=qty]").val());
+        if (qty < 1) return alert("Please Fill Quantity Properly");
 
-        alert(addItem(id, name, price, qty));
+        var stock = Number($(this).attr("data-stock"));
+        if (stock < qty) return alert(qty + " Item Not Available Now!!! Pleasy Try Next Time Or Buy Available Stock ("+stock+")");
+
+        alert(addItem(id, name, price, qty, description));
         display();
         displayInCartPage();
         $("#sub-total").html(priceCart());
         $("#grand-total").html(priceCart());
-        $(".add-cart").text(qtyItem(Number($("#item-data input[name=id]").val())) > 0 ? "Update Cart" : "Add To Cart");
+        $(".add-cart").text(qtyItem( id ) > 0 ? "Update Cart" : "Add To Cart");
     });
-    //Remove Cart Item__________________________________________________________
-    $("body").on("click", ".removeItem", function () {
-        var id = $(this).attr("data-id");
-        removeItem(id);
-        $(this).parent().remove();
-        $("#total-cart").html(Cart.length);
-        $("#item-data input[name=qty]").val(qtyItem(Number($("#item-data input[name=id]").val())));
-        $(".add-cart").text(qtyItem(Number($("#item-data input[name=id]").val())) > 0 ? "Update Cart" : "Add To Cart");
-        if(Cart.length <1){ display(); }
+
+    //Update Cart on Cart Page
+    $("body").on("change", "#cart-item-display input[name=qty]", function(){
+
+        var id = Number($(this).attr("data-id"));
+        var qty = Number($(this).val());
+
+        if (qty < 1) return alert("Please Fill Quantity Properly");
+
+        alert(updateItem(id, qty));
+
+        display();
         displayInCartPage();
         $("#sub-total").html(priceCart());
         $("#grand-total").html(priceCart());
     });
-    //__________________________________________________________________________
-    $("#item-data input[name=qty]").val(qtyItem(Number($("#item-data input[name=id]").val())) || 0);
-    $(".add-cart").text(qtyItem(Number($("#item-data input[name=id]").val())) > 0 ? "Update Cart" : "Add To Cart");
-})
+
+    //Add Cart In Search Page__________________________________________________________________
+    $("body").on("click", ".med-item .add-cart", function () {
+        var id = Number($(this).attr("data-id"));
+        var name = $(this).attr("data-name");
+        var description = $(this).attr("data-description");
+        var price = Number($(this).attr("data-price"));
+        var qty = 1;
+
+        var stock = Number($(this).attr("data-stock"));
+        if (stock < qty) return alert(qty + " Item Not Available Now!!! Pleasy Try Next Time Or Buy Available Stock ("+stock+")");
+
+        alert(addItem(id, name, price, qty, description));
+        display();
+        displayInCartPage();
+        $("#sub-total").html(priceCart());
+        $("#grand-total").html(priceCart());
+        // $(this).text(qtyItem( id ) > 0 ? "Update Cart" : "Add To Cart");
+    });
+
+    //Remove Cart Item__________________________________________________________
+    $("body").on("click", ".removeItem", function () {
+        var id = $(this).attr("data-id");
+        removeItem(id);
+        $(this).parent().parent().remove();
+        $("#total-cart").html(Cart.length);
+        $("#item-data input[name=qty]").val("0");
+        $(".add-cart").text("Add To Cart");
+        if(Cart.length <1){ display(); }
+        displayInCartPage();
+        $(".grand-total").html(priceCart());
+        $("#sub-total").html(priceCart());
+        $("#grand-total").html(priceCart());
+    });
+
+    //Auto Rendaring Code__________________________________________________________________________
+    $("#item-data input[name=qty]")
+        .val(qtyItem(Number($("#item-data button[name=submit]")
+        .attr("data-id"))) || 0);
+
+    $("#item-data .add-cart")
+        .text(qtyItem(Number($("#item-data button[name=submit]")
+        .attr("data-id"))) > 0 ? "Update Cart" : "Add To Cart");
+
+});//Ready Function is over

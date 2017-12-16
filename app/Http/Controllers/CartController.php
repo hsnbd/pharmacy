@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 use DB;
 use Illuminate\Http\Request;
-
+use App\Saledetail;
 class CartController extends Controller
 {
     public function view()
@@ -36,11 +36,14 @@ class CartController extends Controller
         $ids = $request->ids;
         $qtys = $request->qtys;
         foreach ($ids as $key => $id) {
-            $results[] = DB::table("saledetails")->insertGetId([
+            $results[] = Saledetail::create([
                 "medicinesid" => $id,
                 "quantity" => $qtys[$key],
+                "discount" => 0,
+                "date" => \Carbon\Carbon::now(),
+                "done" => 0,
                 "shippingid" => $shippingId
-            ]);
+            ])->id;
         }
         return (count($ids) == count($results))? "true": "false";
     }

@@ -12,6 +12,7 @@
 .top-bar li {padding: 0 10px;}
 
 
+
 .logo-search { padding: 5px 0; }
 .logo-text { font-size: 2rem; }
 .logo-text a{ text-decoration: none; }
@@ -413,8 +414,8 @@ input[type=number]::-webkit-outer-spin-button {
     margin: 0;
     padding: 0;
 }
-#item-display .removeItem {
-    color: red;
+.removeItem {
+    color: darkred;
     padding: 6px;
     font-size: 1.3rem;
     cursor: pointer;
@@ -427,4 +428,13 @@ input[type=number]::-webkit-outer-spin-button {
 .prev-address li:hover, .prev-address li.active{
     background: #333;
     color: #fff;
+}
+.shopping-hover tr {
+    border-bottom: 1px solid #999;
+    margin-bottom: 10px;
+}
+.shopping-hover tr td {
+     vertical-align: top;
+     padding: 10px;
+     background: #fff;
 }

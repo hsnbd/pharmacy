@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <link rel="shortcut icon" type="image/ico" href="{{url('/')}}/images/Bangladesh-Flag.png">
     <title>Online Pharmacy || BD Trusted Online Pharmacy</title>
 
     <meta http-equiv="X-UA-Compatible" content="IE=edge">

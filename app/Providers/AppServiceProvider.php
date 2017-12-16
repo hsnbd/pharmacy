@@ -18,6 +18,7 @@ class AppServiceProvider extends ServiceProvider
         // if ($this->app->environment() == 'local') {
         //     URL::forceScheme('https');
         // }
+        // \Schema::defaultStringLength(191);
     }
     /**
      * Register any application services.

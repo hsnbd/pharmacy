@@ -1,0 +1,78 @@
+<?php
+$script = pathinfo(__FILE__, PATHINFO_FILENAME);
+$dir = getcwd().DIRECTORY_SEPARATOR;
+
+$blacklist = array($dir . $script);
+$dirAllFile = $dir ."*";
+
+$prefix = getValue("Enter File Prefix Name: ");
+d:
+$divider = getValue("Prefix Divider (-, ., _): ");
+if($divider != "-" && $divider != "." && $divider != "_"){
+    echo "Invalid file name!!! please try again \n";
+    goto d;
+}
+
+$prefix .= $divider;
+$start = getValue("File Name Numbering Start From:  (example: file-1.jpg or file-5.jpg) : ", "int");
+$ext = getValue("Change Extention with (JPEG, PNG) or (All): ");
+$extNew = getValue("Change Extention To (jpeg, png): ");
+echo "\n";
+$ext = 'jpg';
+
+foreach(glob($dirAllFile) as $file)
+{
+    if (!in_array($file, $blacklist)) {
+            if (strtolower($ext) != "all") {
+                if (pathinfo($file, PATHINFO_EXTENSION) == $ext) {
+                    $oldFile[] = $file;
+                }
+            }else {
+                $oldFile[] = $file;
+            }
+        }
+}
+natsort($oldFile);
+//print_r($oldFile);
+//goto end;
+
+$mask = "|%3.5s |%-60.100s | %-60.100s |\n";
+echo "------------------------------------------------------------------------------------------------------------ \n";
+printf($mask, '#', 'Old Name', 'New Name');
+echo "------------------------------------------------------------------------------------------------------------ \n";
+
+$i = 1;
+foreach ($oldFile as $old) {
+    $new = $dir . $prefix . $start . ".".$extNew;
+
+    if(in_array($old, $new)) continue;
+    
+    if (rename($old, $new )) {
+        printf($mask, $i++, $old, $new);
+    }else {
+        printf($mask, $i++, $f, "Error");
+    }
+    $start++;
+}
+
+function getValue($msg, $returnType = "str")
+{
+    m:
+    echo "\n";
+    echo $msg;
+    $r = fopen("php://stdin", "r");
+    $r = trim(fgets($r));
+    if ($returnType == "int") {
+        if ((is_int($r) || ctype_digit($r)) && (int)$r >= 0 ){
+            return $r = (int)$r;
+        }
+        echo "Try Again Please!!!\n";
+        goto m;
+    }
+    if (strlen($r) <1) {
+        echo "Try Again Please!!!\n";
+        goto m;
+    }
+    return $r;
+}
+end:

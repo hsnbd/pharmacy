@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\DB;
 use App\Categories;
 use App\Sub_categories;
 use App\Medicines;
+use App\Rating;
+use App\Comment;
 
 
 class BaseController extends Controller
@@ -15,12 +17,21 @@ class BaseController extends Controller
     {
     	return view('index');
     }
-
     //view medicine for all users maybe
     public function medShow($id, $name)
     {
+        $watchlist = null;
+        $rating = round(Rating::where('medicinesid', $id)->avg("rating")) ?? null;
+        $comments = DB::table('comments as c')->where('medicinesid', $id)
+                        ->select('c.*', 'u.name as uname')
+                        ->join('users as u', 'u.id', '=', 'c.usersid')
+                        ->get() ?? null;
+
+        if (\Auth::check()) {
+            $watchlist = DB::table("watch_lists")->where(['medicinesid' => $id, 'usersid' => \Auth::id()])->first();
+        }
         $sMed = Medicines::find($id);
-    	return view('medSingle', compact('sMed'));
+    	return view('medSingle', compact('sMed', 'watchlist', 'rating', 'comments'));
     }
 
     //medicine List By category
@@ -28,23 +39,19 @@ class BaseController extends Controller
     {
         $scat = Sub_categories::where('url_slug', $sub_cat)->first();
         $scatAll = Sub_categories::where('categories_id', $scat->category->id)->get();
-        // dd($scat->category->url_slug);
         $sid = $scat->id;
-
         if (request()->exists('q')) {
             $q = request()->get('q');
             $medList = Medicines::where('sub_categoriesid', $sid)->where('name', 'like', ''. $q . '%')->paginate(4);
         }else {
             $medList = Medicines::where('sub_categoriesid', $sid)->paginate(4);
         }
-        // dd($medList);
         return view('medByCat', compact('scat', 'medList', 'scatAll'));
     }
-
-    //Live Search
+    //live search
     public function liveSearch(Request $request)
     {
-        ($request->search)? $search = $request->search : $search = 0;
+        $search = $request->search ?? null;
         $pdt = DB::table('medicines')
                ->where('name', 'like', '%'.$search.'%')
                ->take(10)
@@ -55,7 +62,6 @@ class BaseController extends Controller
         }
         echo $html;
     }
-
     //Search Results
     public function searchResult(Request $request)
     {
@@ -63,7 +69,6 @@ class BaseController extends Controller
             return redirect()->back();
         }
         $s = $request->s;
-
         $sResults = DB::table('medicines')
                    ->where("name", "like", "%{$s}%")
                    ->paginate(10)

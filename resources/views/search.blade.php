@@ -63,7 +63,7 @@
                                 @foreach ($sResults as $med)
                                     <li class="med-item">
                                         <div class="media">
-                                              <img class="d-flex mr-3" src="{{url('/')}}/images/200x200.jpg" alt="Generic placeholder image" width="100px">
+                                             <img class="d-flex mr-3" src="{{glob(public_path("/images/product/med-" . $med->id. ".*")) ?  url("/") . "/images/product/med-" . $med->id. ".jpg" : url("/")  . "/images/product/demo.jpg" }}" alt="" width="100px">
                                               <div class="media-body">
                                                 <a href="#" >
                                                     <h5 class="mt-0"><a href="{{url('/')}}/medicine/view/{{$med->id}}/{{$med->name}}">{{$med->name}}</a></h5>
@@ -74,6 +74,17 @@
                                                  <ul class="list-unstyled clear-margins">
                                                      <li class="font-weight-bold">${{$med->price}}</li>
                                                      <li class="text-success">In Stock</li>
+                                                     <li>
+                                                         <button name="submit" class="btn btn-sm btn-outline-danger add-cart" type="button"
+                                                             data-id="{{$med->id}}"
+                                                             data-name="{{$med->name}}"
+                                                             data-description="{{$med->description}}"
+                                                             data-stock="{{$med->stock}}"
+                                                             data-price="{{$med->price}}">
+                                                                Add To Cart
+                                                            </script>
+                                                        </button>
+                                                     </li>
                                                  </ul>
                                               </div>
                                         </div>
@@ -88,7 +99,7 @@
     </div>
 
 @endsection
-{{-- 
+{{--
 @push('scripts')
     <script type="text/javascript" src="/js/script.js"></script>
 @endpush --}}

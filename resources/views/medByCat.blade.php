@@ -1,11 +1,9 @@
 @extends('master')
 @section('content')
-
-      <!--medByCat -->
+    <!--medByCat -->
     <div class="medByCat">
         <div class="container">
             <div class="row ">
-
                 <div class="col-md-12">
                     <ol class="breadcrumb">
                       <li class="breadcrumb-item"><a href="#!">Home</a></li>
@@ -124,6 +122,17 @@
                                                  <ul class="list-unstyled clear-margins">
                                                      <li class="font-weight-bold">${{$med->price}}</li>
                                                      <li class="text-success">In Stock</li>
+                                                     <li>
+                                                         <button name="submit" class="btn btn-sm btn-outline-danger add-cart" type="button"
+                                                             data-id="{{$med->id}}"
+                                                             data-name="{{$med->name}}"
+                                                             data-description="{{$med->description}}"
+                                                             data-stock="{{$med->stock}}"
+                                                             data-price="{{$med->price}}">
+                                                                Add To Cart
+                                                            </script>
+                                                        </button>
+                                                     </li>
                                                  </ul>
                                               </div>
                                         </div>

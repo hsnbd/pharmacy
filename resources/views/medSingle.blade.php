@@ -1,5 +1,13 @@
 @extends('master')
 @section('content')
+    <style media="screen">
+        .rating {
+            font-size: 1.6rem;
+            color: #FFD333;
+            cursor: pointer;
+        }
+    </style>
+    <script type="text/javascript" src="{{url('/')}}/js/singlePageScript.js"></script>
       <!--medByCat -->
     <div class="medByCat">
         <div class="container">
@@ -19,7 +27,7 @@
                 </div>
                 <div class="col-md-8">
                     <div class="medList">
-                        <h3><span class="text-success">{{$sMed->name}}</span> - {{$sMed->description}} <button type="button" name="button" class="btn btn-sm btn-outline-warning">Watch List</button></h3>
+                        <h3><span class="text-success">{{$sMed->name}}</span> -  {{$sMed->description}}  - <i id="watchList" title="{{$watchlist? 'Already added': 'Add this item to watch list'}}" class="fa {{$watchlist? 'fa-heart': 'fa-heart-o'}} text-danger"></i></h3>
                         <p>
                             <table class="table  table-responsive">
                               <tbody>
@@ -44,6 +52,18 @@
                                     <td>alertness and prudence in a hazardous situation; care; wariness</td>
                                 </tr>
                                 <tr>
+                                    <td class="font-weight-bold">Avarage Rating:</td>
+                                    <td>
+                                        <div data-rate="{{$rating ? $rating : '0'}}" class="rating">
+                                            <span data-value="1">&star;</span>
+                                            <span data-value="2">&star;</span>
+                                            <span data-value="3">&star;</span>
+                                            <span data-value="4">&star;</span>
+                                            <span data-value="5">&star;</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
                                     <td class="font-weight-bold">Quantity:</td>
                                     <td>
                                         <form id="item-data" style="width: 300px;" action="" method="post">
@@ -58,12 +78,15 @@
                                                     <button class="btn btn-info plus" type="button"><i class="fa fa-plus"></i></button>
                                                 </span>
                                                 <span class="input-group-btn">
-                                                    <button class="btn btn-danger add-cart" type="button">Add To Cart</button>
+                                                    <button name="submit" class="btn btn-danger add-cart" type="button"
+                                                        data-id="{{$sMed->id}}"
+                                                        data-name="{{$sMed->name}}"
+                                                        data-stock="{{$sMed->stock}}"
+                                                        data-price="{{$sMed->price}}">
+                                                        Add To Cart
+                                                    </button>
                                                 </span>
                                             </div>
-                                            <input type="hidden" name="id" value="{{$sMed->id}}">
-                                            <input type="hidden" name="name" value="{{$sMed->name}}">
-                                            <input type="hidden" name="price" value="{{$sMed->price}}">
                                         </form>
                                     </td>
                                 </tr>
@@ -110,13 +133,43 @@
                             SIDE EFFECTS: Changes in your bowel function often occur because of the unabsorbed fat. Fatty/oily stool, oily spotting, intestinal gas with discharge, a feeling of needing to have a bowel movement right away, increased number of bowel movements, or poor bowel control may occur. These side effects may get worse if you eat more fat than you should. If these effects persist or worsen, notify your doctor promptly. If your doctor has directed you to use this medication, remember that he or she has judged that the benefit to you is greater than the risk of side effects. Many people using this medication do not have serious side effects. Stop taking this medication and tell your doctor right away if any of these rare but serious side effects occur: symptoms of liver disease (such as persistent nausea/vomiting, severe stomach/abdominal pain, dark urine, yellowing eyes/skin), symptoms of kidney stones (such as back pain, pain when urinating, pink/bloody urine). A very serious allergic reaction to this drug is rare. However, get medical help right away if you notice any symptoms of a serious allergic reaction, including: rash, itching/swelling (especially of the face/tongue/throat), severe dizziness, trouble breathing. This is not a complete list of possible side effects. If you notice other effects not listed above, contact your doctor or pharmacist. In the US - Call your doctor for medical advice about side effects. You may report side effects to FDA at 1-800-FDA-1088 or at www.fda.gov/medwatch. In Canada - Call your doctor for medical advice about side effects. You may report side effects to Health Canada at 1-866-234-2345.
                       </div>
                       <div class="tab-pane" id="reviews" role="tabpanel">
-                          “Health Warehouse has always been very professional and the customer service is excellent. The prices are excellent as well, I trust Health Warehouse to complete my orders and ship as promised. I will and do recommend them t...”
+                          <form class="addComment row" method="post" action="{{url('/')}}/add-comment">
+                              {{ csrf_field() }}
+                              <input type="hidden" name="id" value="{{$sMed->id}}">
+                              <textarea name="comment" rows="6" class="form-control"placeholder="Write your review here..."></textarea>
+                              <br>
+                              <input type="submit" name="submit" value="Comment" class="form-control btn btn-success col-md-3">
+                              @if ($errors->has('comment') || Session::has('msg'))
+                                  <div class="text-danger">
+                                      {{Session::has('msg')? Session::get('msg') : ""}}
+                                      {{($errors->has('comment')) ? $errors->first('comment') : ""}}
+                                  </div>
+                              @endif
+                          </form>
+                          <br>
+                          <br>
+                          <div class="row">
+                             @forelse ($comments as $comment)
+                                 <div class="media col-md-12">
+                                     <img class="d-flex mr-3" src="{{url('/')}}/images/product/demo.jpg" alt="Generic placeholder image" width="80px">
+                                     <div class="media-body">
+                                       <h5 class="mt-0">{{$comment->uname}}</h5>
+                                       <p>{{$comment->comment}}</p>
+                                     </div>
+                                 </div>
+                             @empty
+                                 <div class="media">
+                                     <div class="media-body">
+                                       <p>No Comment Yet!!! Be First In Comment</p>
+                                     </div>
+                                 </div>
+                             @endforelse
+                          </div>
                       </div>
                     </div>
                 </div>
             </div>
         {{-- @endforeach --}}
-
         </div>
     </div>
 
